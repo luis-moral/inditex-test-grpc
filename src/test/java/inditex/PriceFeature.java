@@ -3,17 +3,15 @@ package inditex;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @ActiveProfiles(profiles = "test")
-@ContextConfiguration(
-	classes = { Application.class }
-)
+@SpringBootTest(classes = { Application.class })
 public class PriceFeature {
 
 	@Value("${endpoint.public.v1.price.path.base}")
