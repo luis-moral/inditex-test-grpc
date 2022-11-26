@@ -20,8 +20,9 @@
 		<!-- Production -->
 		<dependency>
 			<groupId>io.grpc</groupId>
-			<artifactId>grpc-netty</artifactId>
+			<artifactId>grpc-netty-shaded</artifactId>
 			<version>1.51.0</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.grpc</groupId>
@@ -32,6 +33,12 @@
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-stub</artifactId>
 			<version>1.51.0</version>
+		</dependency>
+		<dependency> <!-- necessary for Java 9+ -->
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>annotations-api</artifactId>
+			<version>6.0.53</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -73,7 +80,7 @@
 			<extension>
 				<groupId>kr.motd.maven</groupId>
 				<artifactId>os-maven-plugin</artifactId>
-				<version>1.6.1</version>
+				<version>1.6.2</version>
 			</extension>
 		</extensions>
 
@@ -81,6 +88,25 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/generated-sources/protobuf/grpc-java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- Testing -->
@@ -103,11 +129,11 @@
 				<version>0.6.1</version>
 				<configuration>
 					<protocArtifact>
-						com.google.protobuf:protoc:3.3.0:exe:${os.detected.classifier}
+						com.google.protobuf:protoc:3.21.7:exe:${os.detected.classifier}
 					</protocArtifact>
 					<pluginId>grpc-java</pluginId>
 					<pluginArtifact>
-						io.grpc:protoc-gen-grpc-java:1.4.0:exe:${os.detected.classifier}
+						io.grpc:protoc-gen-grpc-java:1.51.0:exe:${os.detected.classifier}
 					</pluginArtifact>
 				</configuration>
 				<executions>

@@ -1,6 +1,7 @@
 syntax = "proto3";
 option java_multiple_files = true;
-package inditex.infrastructure.grpc.price.get;
+option java_package = "inditex.infrastructure.grpc.price.get";
+option java_outer_classname = "GetPriceProto";
 
 message GetPriceRequest {
   uint64 product_id = 1;
@@ -18,6 +19,6 @@ message GetPriceResponse {
   string currency = 7;
 }
 
-service GetPriceHandler {
+service GetPrice {
   rpc price(GetPriceRequest) returns (GetPriceResponse);
 }
