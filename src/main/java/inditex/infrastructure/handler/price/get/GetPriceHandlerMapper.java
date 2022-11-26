@@ -37,7 +37,7 @@ public class GetPriceHandlerMapper {
                 .setProductId(price.productId())
                 .setBrandId(price.brandId())
                 .setStartDate(ZonedDateTime.ofInstant(Instant.ofEpochMilli(price.startDate()), zoneId).toOffsetDateTime().toString())
-                .setStartDate(ZonedDateTime.ofInstant(Instant.ofEpochMilli(price.endDate()), zoneId).toOffsetDateTime().toString())
+                .setEndDate(ZonedDateTime.ofInstant(Instant.ofEpochMilli(price.endDate()), zoneId).toOffsetDateTime().toString())
                 .setPrice(price.price().doubleValue())
                 .setCurrency(price.currency().getCurrencyCode())
                 .build();

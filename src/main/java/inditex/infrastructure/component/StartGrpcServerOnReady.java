@@ -25,14 +25,10 @@ public class StartGrpcServerOnReady {
             logger.info("Starting GRPC Server");
 
             grpcServer.start();
-            //grpcServer.awaitTermination();
         }
         catch (IOException e) {
             throw new RuntimeException(e);
         }
-        /*catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }*/
     }
 
     @PreDestroy

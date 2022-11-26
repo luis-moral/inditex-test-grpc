@@ -68,7 +68,7 @@ public class GetPriceHandlerMapperShould {
                 1500L,
                 5,
                 1668853977000L,
-                1668863977000L,
+                1668863987000L,
                 new BigDecimal("25.5"),
                 Currency.getInstance("EUR"),
                 0
@@ -81,7 +81,7 @@ public class GetPriceHandlerMapperShould {
                 .setProductId(1500L)
                 .setBrandId(5)
                 .setStartDate(ZonedDateTime.ofInstant(Instant.ofEpochMilli(1668853977000L), zoneId).toOffsetDateTime().toString())
-                .setStartDate(ZonedDateTime.ofInstant(Instant.ofEpochMilli(1668863977000L), zoneId).toOffsetDateTime().toString())
+                .setEndDate(ZonedDateTime.ofInstant(Instant.ofEpochMilli(1668863987000L), zoneId).toOffsetDateTime().toString())
                 .setPrice(new BigDecimal("25.5").doubleValue())
                 .setCurrency("EUR")
                 .build();

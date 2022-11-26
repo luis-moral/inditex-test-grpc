@@ -1,11 +1,17 @@
 package inditex;
 
+import inditex.infrastructure.grpc.price.get.GetPriceGrpc;
+import inditex.infrastructure.grpc.price.get.GetPriceRequest;
+import inditex.infrastructure.grpc.price.get.GetPriceResponse;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -14,91 +20,116 @@ import java.time.ZonedDateTime;
 @SpringBootTest(classes = { Application.class })
 public class PriceFeature {
 
-	@Value("${endpoint.public.v1.price.path.base}")
-	private String priceEndpoint;
+	@Value("${server.port}")
+	private int serverPort;
 
-	@Autowired
-	private WebTestClient webClient;
+	private ManagedChannel channel;
+
+	@BeforeEach
+	public void setUp() {
+		channel =
+			ManagedChannelBuilder
+				.forAddress("localhost", serverPort)
+				.usePlaintext()
+				.build();
+	}
 
 	@Test void
 	return_the_price_for_a_product_in_a_time_period() {
 		assertPriceFor(
 			new PriceFilter(35455, 1, ZonedDateTime.of(2020, 6, 14, 10, 0, 0, 0, ZoneId.of("CET"))),
-			"feature/price/response/expected_14_06_2020-10_00.json"
+			response(1, 35455, 1, "2020-06-14T00:00+02:00", "2020-12-31T23:59:59+01:00", 35.5, "EUR")
 		);
 		assertPriceFor(
 			new PriceFilter(35455, 1, ZonedDateTime.of(2020, 6, 14, 16, 0, 0, 0, ZoneId.of("CET"))),
-			"feature/price/response/expected_14_06_2020-16_00.json"
+			response(2, 35455, 1, "2020-06-14T15:00+02:00", "2020-06-14T18:30+02:00", 25.45, "EUR")
 		);
 		assertPriceFor(
 			new PriceFilter(35455, 1, ZonedDateTime.of(2020, 6, 14, 21, 0, 0, 0, ZoneId.of("CET"))),
-			"feature/price/response/expected_14_06_2020-21_00.json"
+			response(1, 35455, 1, "2020-06-14T00:00+02:00", "2020-12-31T23:59:59+01:00", 35.5, "EUR")
 		);
 		assertPriceFor(
 			new PriceFilter(35455, 1, ZonedDateTime.of(2020, 6, 15, 10, 0, 0, 0, ZoneId.of("CET"))),
-			"feature/price/response/expected_15_06_2020-10_00.json"
+			response(3, 35455, 1, "2020-06-15T00:00+02:00", "2020-06-15T11:00+02:00", 30.5, "EUR")
 		);
 		assertPriceFor(
 			new PriceFilter(35455, 1, ZonedDateTime.of(2020, 6, 16, 21, 0, 0, 0, ZoneId.of("CET"))),
-			"feature/price/response/expected_16_06_2020-21_00.json"
+			response(4, 35455, 1, "2020-06-15T16:00+02:00", "2020-12-31T23:59:59+01:00", 38.95, "EUR")
 		);
 
 	}
 
 	@Test public void
-	error_when_missing_parameters() {
-		/*webClient
-			.get()
-			.uri(priceEndpoint)
-			.exchange()
-			.expectStatus()
-			.isEqualTo(HttpStatus.BAD_REQUEST)
-			.expectBody(HashMap.class)
-			.consumeWith(response ->
-				{
-					Map body = response.getResponseBody();
+	return_default_when_no_prices() {
+		GetPriceGrpc.GetPriceBlockingStub getPriceStub = GetPriceGrpc.newBlockingStub(channel);
 
-					Assertions
-						.assertThat(body.get("status"))
-						.isEqualTo(400);
+		GetPriceRequest request =
+			GetPriceRequest
+				.newBuilder()
+				.setProductId(1)
+				.setBrandId(2)
+				.setDate("2020-06-15T00:00+02:00")
+				.build();
 
-					Assertions
-						.assertThat(body.get("error"))
-						.isEqualTo("Parameter [productId] is mandatory");
-				}
-			);*/
+		Assertions
+			.assertThat(getPriceStub.price(request))
+			.isEqualTo(GetPriceResponse.getDefaultInstance());
 	}
 
-	private void assertPriceFor(PriceFilter parameters, String expected) {
-		/*webClient
-			.get()
-			.uri(builder ->
-				builder
-					.path(priceEndpoint)
-					.queryParam("productId", parameters.productId())
-					.queryParam("brandId", parameters.brandId())
-					.queryParam("date", UrlEncoder.encode(parameters.date().toOffsetDateTime().toString()))
-					.build()
-			)
-			.exchange()
-			.expectStatus()
-			.isOk()
-			.expectBody(String.class)
-			.consumeWith(response ->
-				{
-					try {
-						JSONAssert
-							.assertEquals(
-								TestUtils.readFile(expected),
-								response.getResponseBody(),
-								JSONCompareMode.LENIENT
-							);
-					}
-					catch (JSONException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			);*/
+	@Test public void
+	error_when_missing_parameters() {
+		GetPriceGrpc.GetPriceBlockingStub getPriceStub = GetPriceGrpc.newBlockingStub(channel);
+
+		GetPriceRequest request =
+			GetPriceRequest
+				.newBuilder()
+				.setProductId(1)
+				.setBrandId(2)
+				.setDate("")
+				.build();
+
+		Assertions
+			.assertThatThrownBy(() -> getPriceStub.price(request))
+			.isInstanceOf(StatusRuntimeException.class)
+			.hasMessage("INVALID_ARGUMENT: Parameter [date] is mandatory");
+
+	}
+
+	private void assertPriceFor(PriceFilter parameters, GetPriceResponse expected) {
+		GetPriceGrpc.GetPriceBlockingStub getPriceStub = GetPriceGrpc.newBlockingStub(channel);
+		GetPriceRequest request =
+			GetPriceRequest
+				.newBuilder()
+				.setProductId(parameters.productId())
+				.setBrandId(parameters.brandId())
+				.setDate(parameters.date().toOffsetDateTime().toString())
+				.build();
+
+		Assertions
+			.assertThat(getPriceStub.price(request))
+			.isEqualTo(expected);
+	}
+
+	private GetPriceResponse response(
+		long id,
+		long productId,
+		int brandId,
+		String startDate,
+		String endDate,
+		double price,
+		String currency
+	) {
+		return
+			GetPriceResponse
+				.newBuilder()
+				.setId(id)
+				.setProductId(productId)
+				.setBrandId(brandId)
+				.setStartDate(startDate)
+				.setEndDate(endDate)
+				.setPrice(price)
+				.setCurrency(currency)
+				.build();
 	}
 
 	private record PriceFilter(long productId, int brandId, ZonedDateTime date) {
