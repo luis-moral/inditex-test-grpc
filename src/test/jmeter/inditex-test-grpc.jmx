@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="inditex-test-grpc" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -68,12 +68,12 @@
           <hashTree/>
         </hashTree>
         <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="Status" enabled="true">
-          <stringProp name="GRPCSampler.protoFolder">../../main/proto/status/status.proto</stringProp>
+          <stringProp name="GRPCSampler.protoFolder">C:\Users\Luis\Documents\github\inditex-test-grpc\src\main\proto</stringProp>
           <stringProp name="GRPCSampler.libFolder"></stringProp>
           <stringProp name="GRPCSampler.metadata"></stringProp>
           <stringProp name="GRPCSampler.host">${server.host}</stringProp>
           <stringProp name="GRPCSampler.port">${server.port}</stringProp>
-          <stringProp name="GRPCSampler.fullMethod"></stringProp>
+          <stringProp name="GRPCSampler.fullMethod">GetStatus/status</stringProp>
           <stringProp name="GRPCSampler.deadline">1000</stringProp>
           <boolProp name="GRPCSampler.tls">false</boolProp>
           <boolProp name="GRPCSampler.tlsDisableVerification">false</boolProp>
@@ -83,49 +83,31 @@
 	&quot;date&quot;: &quot;&quot;
 }
 </stringProp>
+          <stringProp name="GRPCSampler.channelAwaitTermination">5000</stringProp>
+          <stringProp name="GRPCSampler.maxInboundMessageSize">4194304</stringProp>
+          <stringProp name="GRPCSampler.maxInboundMetadataSize">8192</stringProp>
         </vn.zalopay.benchmark.GRPCSampler>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Price" enabled="false">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="productId" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">${product_id}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">productId</stringProp>
-              </elementProp>
-              <elementProp name="brandId" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">${brand_id}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">brandId</stringProp>
-              </elementProp>
-              <elementProp name="date" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">${date}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">date</stringProp>
-                <stringProp name="HTTPArgument.content_type">text/UTF8</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain">${server.host}</stringProp>
-          <stringProp name="HTTPSampler.port">${server.port}</stringProp>
-          <stringProp name="HTTPSampler.protocol">${server.protocol}</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/public/v1/price</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
+        <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="Price" enabled="true">
+          <stringProp name="GRPCSampler.protoFolder">C:\Users\Luis\Documents\github\inditex-test-grpc\src\main\proto</stringProp>
+          <stringProp name="GRPCSampler.libFolder"></stringProp>
+          <stringProp name="GRPCSampler.metadata"></stringProp>
+          <stringProp name="GRPCSampler.host">${server.host}</stringProp>
+          <stringProp name="GRPCSampler.port">${server.port}</stringProp>
+          <stringProp name="GRPCSampler.fullMethod">GetPrice/price</stringProp>
+          <stringProp name="GRPCSampler.deadline">1000</stringProp>
+          <boolProp name="GRPCSampler.tls">false</boolProp>
+          <boolProp name="GRPCSampler.tlsDisableVerification">false</boolProp>
+          <stringProp name="GRPCSampler.requestJson">{
+	&quot;productId&quot;: 35455,
+	&quot;brandId&quot;: 1,
+	&quot;date&quot;: &quot;2020-06-14T10:00+02:00&quot;
+}
+</stringProp>
+          <stringProp name="GRPCSampler.channelAwaitTermination">5000</stringProp>
+          <stringProp name="GRPCSampler.maxInboundMessageSize">4194304</stringProp>
+          <stringProp name="GRPCSampler.maxInboundMetadataSize">8192</stringProp>
+        </vn.zalopay.benchmark.GRPCSampler>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
