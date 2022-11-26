@@ -1,0 +1,46 @@
+spring:
+  main:
+    banner-mode: "OFF"
+  output:
+    ansi:
+      enabled: DETECT
+  r2dbc:
+    url: "r2dbc:h2:mem:///inditextdb;DB_CLOSE_DELAY=-1;"
+    username: sa
+    password:
+  flyway:
+    url: "jdbc:h2:mem:inditextdb;DB_CLOSE_DELAY=-1;"
+    user: ${spring.r2dbc.username}
+    password: ${spring.r2dbc.password}
+    locations: "classpath:db/migration"
+    run-migrations: true
+
+logging:
+  level:
+    root: INFO
+    inditex.infrastructure.configuration: DEBUG
+  file:
+    name: "log/inditex-test.log"
+  logback:
+    rollingpolicy:
+      total-size-cap: 4 GB
+      max-file-size: 100 MB
+      max-history: 7
+
+application:
+  date-time:
+    zone-id: "CET"
+
+server:
+  port: 8081
+
+endpoint:
+  status:
+    path: "/status"
+
+  public:
+    v1:
+      path: "/public/v1"
+      price:
+        path:
+          base: "${endpoint.public.v1.path}/price"

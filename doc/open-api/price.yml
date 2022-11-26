@@ -1,0 +1,166 @@
+openapi: 3.0.9
+info:
+  description: "Inditex Test - Price"
+  version: "1.0.0"
+  title: "Inditex Test - Price"
+  contact:
+    email: "luis.moral@gmail.com"
+
+servers:
+  - url: '{protocol}://localhost:8081/{basePath}'
+    description: Localhost
+    variables:
+      protocol:
+        description: Protocol
+        enum:
+          - 'http'
+        default: 'http'
+      basePath:
+        description: Base path
+        enum:
+          - 'public/v1'
+        default: 'public/v1'
+
+#########
+# Paths #
+#########
+paths:
+  /price:
+    get:
+      summary: "Returns the applicable price"
+      description: "Returns the applicable price"
+      tags:
+        - "Price"
+      parameters:
+        - $ref: '#/components/parameters/product_id_required'
+        - $ref: '#/components/parameters/brand_id_required'
+        - $ref: '#/components/parameters/date_id_required'
+      responses:
+        "200":
+          description: "Applicable Price"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPrice'
+        "4XX":
+          $ref: '#/components/responses/Error4XX'
+        "5XX":
+          $ref: '#/components/responses/Error5XX'
+
+##############
+# Components #
+##############
+components:
+  ##############
+  # Parameters #
+  ##############
+  parameters:
+    product_id_required:
+      in: query
+      name: productId
+      required: true
+      description: "Product id"
+      schema:
+        type: integer
+        example: 35455
+
+    brand_id_required:
+      in: query
+      name: brandId
+      required: true
+      description: "Brand id"
+      schema:
+        type: integer
+        example: 1
+
+    date_id_required:
+      in: query
+      name: date
+      required: true
+      description: "ISO-8601 Date"
+      schema:
+        type: string
+        format: date-time
+        example: "2020-06-14T10:00:00+01:00"
+
+  #############
+  # Responses #
+  #############
+  responses:
+    Error4XX:
+      description: "Invalid request or other user errors"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error4XX'
+
+    Error5XX:
+      description: "Server error"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error5XX'
+
+  ###########
+  # Schemas #
+  ###########
+  schemas:
+    GetPrice:
+      type: object
+      description: "Applicable price"
+      properties:
+        id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 35455
+        brand_id:
+          type: integer
+          example: 1
+        start_date:
+          type: string
+          format: date-time
+          example: "2020-06-14T10.00.00+01:00"
+        end_date:
+          type: string
+          format: date-time
+          example: "2020-12-31T23:59:59+01:00"
+        price:
+          type: number
+          example: 35.5
+        currency:
+          type: string
+          example: "EUR"
+
+    Error4XX:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: "HTTP error code"
+          example: 400
+        message:
+          type: string
+          description: "Error description"
+          example: "Invalid product id"
+        timestamp:
+          type: integer
+          description: "Error epoch timestamp in milliseconds"
+          example: 1626726443741
+
+    Error5XX:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: "HTTP error code"
+          example: 500
+        message:
+          type: string
+          description: "Error description"
+          example: "Internal error"
+        timestamp:
+          type: integer
+          description: "Error epoch timestamp in milliseconds"
+          example: 1626726443741
