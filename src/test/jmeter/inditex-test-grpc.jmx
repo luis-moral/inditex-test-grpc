@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="inditex-test" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="inditex-test-grpc" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
@@ -32,11 +32,6 @@
           <hashTree>
             <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="localhost" enabled="true">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="server.protocol" elementType="Argument">
-                  <stringProp name="Argument.name">server.protocol</stringProp>
-                  <stringProp name="Argument.value">http</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
                 <elementProp name="server.host" elementType="Argument">
                   <stringProp name="Argument.name">server.host</stringProp>
                   <stringProp name="Argument.value">localhost</stringProp>
@@ -72,26 +67,25 @@
           </Arguments>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Status" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain">${server.host}</stringProp>
-          <stringProp name="HTTPSampler.port">${server.port}</stringProp>
-          <stringProp name="HTTPSampler.protocol">${server.protocol}</stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/status</stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-        </HTTPSamplerProxy>
+        <vn.zalopay.benchmark.GRPCSampler guiclass="vn.zalopay.benchmark.GRPCSamplerGui" testclass="vn.zalopay.benchmark.GRPCSampler" testname="Status" enabled="true">
+          <stringProp name="GRPCSampler.protoFolder">../../main/proto/status/status.proto</stringProp>
+          <stringProp name="GRPCSampler.libFolder"></stringProp>
+          <stringProp name="GRPCSampler.metadata"></stringProp>
+          <stringProp name="GRPCSampler.host">${server.host}</stringProp>
+          <stringProp name="GRPCSampler.port">${server.port}</stringProp>
+          <stringProp name="GRPCSampler.fullMethod"></stringProp>
+          <stringProp name="GRPCSampler.deadline">1000</stringProp>
+          <boolProp name="GRPCSampler.tls">false</boolProp>
+          <boolProp name="GRPCSampler.tlsDisableVerification">false</boolProp>
+          <stringProp name="GRPCSampler.requestJson">{
+	&quot;productId&quot;: 1,
+	&quot;brandId&quot;: 1,
+	&quot;date&quot;: &quot;&quot;
+}
+</stringProp>
+        </vn.zalopay.benchmark.GRPCSampler>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Price" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Price" enabled="false">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="productId" elementType="HTTPArgument">

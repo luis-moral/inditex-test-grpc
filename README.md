@@ -2,7 +2,7 @@
 
 - [Requirements](TECHNICAL_TEST.md)
 
-- [JMeter test](src/test/jmeter/inditex-test.jmx)
+- [JMeter test](src/test/jmeter/inditex-test-grpc.jmx)
 
 - [Notes](NOTES.md)
 
@@ -30,4 +30,4 @@
 ./mvnw clean spring-boot:run
 ```
 
-You can test the endpoint using the [JMeter test](src/test/jmeter/inditex-test.jmx).
+You can test the endpoint using the [JMeter test](src/test/jmeter/inditex-test-grpc.jmx).
