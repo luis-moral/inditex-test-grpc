@@ -7,22 +7,12 @@ import io.grpc.ServerBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.server.RequestPredicates;
-import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.RouterFunctions;
-import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
 public class GrpcServerConfiguration {
 
     @Value("${server.port}")
     private int serverPort;
-
-    @Value("${endpoint.status.path}")
-    private String statusEndpoint;
-
-    @Value("${endpoint.public.v1.price.path.base}")
-    private String priceEndpoint;
 
     @Bean
     public Server grpcServer(
@@ -32,7 +22,8 @@ public class GrpcServerConfiguration {
         return
             ServerBuilder
                 .forPort(serverPort)
-                .addService(new HelloServiceImpl())
+                .addService(getStatusHandler)
+                .addService(getPriceHandler)
                 .build();
     }
 }

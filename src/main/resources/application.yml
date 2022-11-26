@@ -33,14 +33,3 @@ application:
 
 server:
   port: 8081
-
-endpoint:
-  status:
-    path: "/status"
-
-  public:
-    v1:
-      path: "/public/v1"
-      price:
-        path:
-          base: "${endpoint.public.v1.path}/price"

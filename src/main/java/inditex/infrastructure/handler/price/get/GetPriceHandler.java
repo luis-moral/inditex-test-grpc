@@ -4,6 +4,7 @@ import inditex.domain.price.GetPriceService;
 import inditex.infrastructure.grpc.price.get.GetPriceGrpc;
 import inditex.infrastructure.grpc.price.get.GetPriceRequest;
 import inditex.infrastructure.grpc.price.get.GetPriceResponse;
+import inditex.infrastructure.util.validator.exception.ValidationException;
 import io.grpc.stub.StreamObserver;
 
 public class GetPriceHandler extends GetPriceGrpc.GetPriceImplBase {
@@ -27,9 +28,16 @@ public class GetPriceHandler extends GetPriceGrpc.GetPriceImplBase {
         getPriceService
             .price(handlerMapper.toGetPriceFilter(request))
             .map(handlerMapper::toGetPriceResponse)
-            .doOnNext(response -> {
-                responseObserver.onNext(response);
-                responseObserver.onCompleted();
+            .doOnError(
+                ValidationException.class,
+                error -> {
+                    responseObserver.onError(error);
+                    responseObserver.onCompleted();
+            })
+            .doOnNext(
+                response -> {
+                    responseObserver.onNext(response);
+                    responseObserver.onCompleted();
             });
     }
 }

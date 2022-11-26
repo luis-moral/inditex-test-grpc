@@ -5,14 +5,14 @@ option java_outer_classname = "GetPriceProto";
 
 message GetPriceRequest {
   uint64 product_id = 1;
-  uint64 brand_id = 2;
+  uint32 brand_id = 2;
   string date = 3;
 }
 
 message GetPriceResponse {
   uint64 id = 1;
   uint64 product_id = 2;
-  uint64 brand_id = 3;
+  uint32 brand_id = 3;
   string start_date = 4;
   string end_date = 5;
   double price = 6;
