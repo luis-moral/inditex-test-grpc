@@ -21,7 +21,7 @@ logging:
     root: INFO
     inditex.infrastructure.configuration: DEBUG
   file:
-    name: "log/inditex-test.log"
+    name: "log/inditex-test-grpc.log"
   logback:
     rollingpolicy:
       total-size-cap: 4 GB

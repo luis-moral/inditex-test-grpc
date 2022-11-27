@@ -77,12 +77,7 @@
           <stringProp name="GRPCSampler.deadline">1000</stringProp>
           <boolProp name="GRPCSampler.tls">false</boolProp>
           <boolProp name="GRPCSampler.tlsDisableVerification">false</boolProp>
-          <stringProp name="GRPCSampler.requestJson">{
-	&quot;productId&quot;: 1,
-	&quot;brandId&quot;: 1,
-	&quot;date&quot;: &quot;&quot;
-}
-</stringProp>
+          <stringProp name="GRPCSampler.requestJson"></stringProp>
           <stringProp name="GRPCSampler.channelAwaitTermination">5000</stringProp>
           <stringProp name="GRPCSampler.maxInboundMessageSize">4194304</stringProp>
           <stringProp name="GRPCSampler.maxInboundMetadataSize">8192</stringProp>
